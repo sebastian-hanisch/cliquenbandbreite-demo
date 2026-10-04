@@ -10,6 +10,7 @@ Lauffaehig mit: streamlit run app.py
 
 import streamlit as st
 
+import cb_algorithm as A
 import cb_constants as C
 import cb_evaluation as ev
 import cb_visualization as viz
@@ -60,7 +61,7 @@ gekennzeichnet**: es baut direkt auf der eigenen, veröffentlichten Forschungsar
 problem", arXiv:1605.00450 (2016)**. Ein Hypergraph H=(V,E) modelliert z. B. ein Multielektroden-Array: ein Neuron mit Kontakt zu einer Elektrodenmenge S erzeugt eine **schwache Clique** im
 **2-Sektionsgraphen** G_H; die kleinste **schwache Kantenclique-Überdeckung** (chi_e) identifiziert die Neuronen. **Proposition 1** des Papers zeigt chi_e(H) = chi_v(G~_H) - die
 Eckenüberdeckungszahl durch Cliquen des **schwachen Kantenclique-Graphen**. Für die spezielle Graphenfamilie **G(n,k,b)** (k-elementige Teilmengen von {0,...,n} mit Spannweite <= b) gibt das
-Paper eine **exakte Formel (Satz 1a)**, eine **Asymptotik (Satz 1b)** und eine **offene Vermutung (Satz 2)** für die Bandbreite an.
+Paper eine **exakte Formel (Satz 1a)**, eine **Asymptotik (Satz 1b)** und für b~β·n mit **Satz 2** den exakten Wert (Fall a) bzw. nur Schranken mit einer **offenen Vermutung** für die obere Schranke (Fall b) für die Bandbreite an.
 """
 )
 st.caption(
@@ -75,7 +76,7 @@ with st.expander("So funktioniert die Messung", expanded=True):
 2. **2-Sektionsgraph und schwacher Kantenclique-Graph** (`two_section_graph`, `weak_edge_clique_graph`): u,v benachbart, wenn eine Hyperkante beide enthält; zwei Hyperkanten e,e' benachbart in
    G~_H, wenn e∪e' selbst eine schwache Clique ist.
 3. **Cliquenüberdeckung** (`clique_cover_number`, `greedy_color`, `banded_coloring_dp`): exakt (Proposition 1 über G~_H) gegen Greedy gegen eine selbst entworfene, bandbreitenbeschränkte DP.
-4. **Asymptotik/Vermutung**: Satz 1a exakt auf 28 Fällen, Satz 1b als Konvergenz gegen k·C(b,k), Satz 2 als reine Exploration einer offenen Vermutung - ohne sie zu entscheiden.
+4. **Asymptotik/Vermutung**: Satz 1a exakt auf 28 Fällen, Satz 1b als Konvergenz gegen k·C(b,k), Satz 2 als reine Exploration (Fall a) ist bewiesen, Fall b) hat eine offene Vermutung) - ohne etwas davon zu entscheiden.
         """
     )
 
@@ -221,10 +222,14 @@ else:
     st.markdown("### Satz 1b (Asymptotik, b=o(n))")
     st.plotly_chart(viz.build_satz1b_chart(s1b_rows), width="stretch", key="s4_satz1b")
     st.caption("Verhältnis gemessene Bandbreite / [k·C(b,k)] über wachsendes n - bei b = 2 und b = 3 liegt es bei 1; bei b = 4 gibt die exakte Suche meist auf (nur n = 10 gelingt, dort 11 < 12); sonst bleibt eine Cuthill-McKee-Obergrenze, sie liegt darüber (ca. 1,1 bis 1,8) und nähert sich 1 nicht. KEIN Gültigkeitstest (die Formel gilt nur im Grenzwert n→∞).")
-    st.markdown("### Satz 2 (b~β·n, offene Vermutung)")
+    st.markdown("### Satz 2 (b~β·n: Fall a) exakt, Fall b) offene Vermutung)")
     beta_choice = st.select_slider("β", options=C.SATZ2_BETAS, key="satz2_beta")
     st.plotly_chart(viz.build_satz2_chart(s2_rows, beta_choice), width="stretch", key=f"s4_satz2_{beta_choice}")
-    st.caption("NUR EXPLORATION mit endlichem n - entscheidet die offene Vermutung (Satz 2) NICHT, unabhängig davon, wie nah die Kurven an den Schranken liegen.")
+    if A.satz2_case(beta_choice) == "a":
+        st.caption(f"Für β = {beta_choice} gilt im Paper Fall a): B ~ c1·n^k ist asymptotisch bewiesen (c2+c3 ist hier nur die allgemeine Obergrenze, nicht der Wert). Die Kurve ist die Cuthill-McKee-Obergrenze bei endlichem n, keine exakte Bandbreite.")
+    else:
+        st.caption(f"Für β = {beta_choice} gilt im Paper Fall b): bewiesen sind nur die Schranken max{{c1, c2+c3/q^(k-1)}} ≲ B/n^k ≲ c2+c3; dass die obere Schranke der wahre Wert ist, ist die offene Vermutung.")
+    st.caption("NUR EXPLORATION mit endlichem n - sie bestätigt weder den bewiesenen Wert in Fall a) noch entscheidet sie die offene Vermutung in Fall b), unabhängig davon, wie nah die Kurven an den Schranken liegen.")
 
 st.markdown("---")
 
@@ -250,7 +255,7 @@ st.markdown(
 |---|---|---|
 | **Satz 1a gilt allgemein** | Nur für b >= (n+k-1)/2 bewiesen - außerhalb dieser Schwelle wird nur GEMESSEN, nicht mit der Formel verglichen. | - |
 | **`exact_bandwidth_layered` löst jede Instanz** | Nein - Bandbreitenminimierung ist NP-vollständig; ab einem `node_budget` gibt der Löser ehrlich "nicht in angemessener Zeit berechnet" zurück, statt zu hängen (gemessen: Schwierigkeit hängt NICHT einfach von der Eckenzahl ab, s. README). | - |
-| **Satz 2 ist entschieden** | Nein - eine offene Vermutung; die Demo zeigt nur eine Exploration mit endlichem n, niemals eine Entscheidung. | - |
+| **Satz 2 ist entschieden** | Nur teilweise: Fall a) ist im Paper bewiesen, in Fall b) ist die obere Schranke eine offene Vermutung. Die Demo zeigt nur eine Exploration mit endlichem n, niemals eine Entscheidung. | - |
 | **`banded_coloring_dp` schlägt Greedy immer** | Nein - ein Greedy-Verfahren mit Fenster-Zustand, gemessen mal besser, mal schlechter als eine andere Greedy-Reihenfolge (nie besser als das globale Optimum). | - |
 | **Elektrodengitter-Beispiel ist realistisch** | Nein - eine stark vereinfachte, synthetische Illustration der Paper-Motivation, KEINE Rekonstruktion der echten Spike-Simulation aus `delay-graph-demo`. | - |
 """

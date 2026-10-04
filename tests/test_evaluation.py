@@ -108,6 +108,8 @@ def test_satz2_lower_ref_uses_q_not_beta_and_cases():
         q, _ = A._qr(r["beta"])
         assert abs(r["lower_ref"] - max(r["c1"], r["c2"] + r["c3"] / q)) < 1e-12
         assert r["lower_ref"] <= r["upper_ref"] + 1e-12
+    # Fall a)/b) nach Theorem 2 (arXiv:1605.00450): Fall b) nur bei beta = 0.35
+    assert [A.satz2_case(b) for b in (0.15, 0.25, 0.35, 0.45)] == ["a", "a", "b", "a"]
 
 
 def test_qr_rejects_beta_outside_paper_range():

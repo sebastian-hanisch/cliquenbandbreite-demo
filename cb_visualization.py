@@ -196,7 +196,7 @@ def build_satz2_chart(rows, beta):
         fig.add_hline(y=sub[0]["upper_ref"], line=dict(color=RED, width=1.4, dash="dash"), annotation_text="c2+c3 (Obergrenze)", annotation_position="bottom left",
                       annotation=dict(bgcolor="white"))
     fig.update_layout(height=380, margin=dict(l=10, r=10, t=40, b=10), legend=dict(orientation="h", y=1.18), plot_bgcolor="white",
-                       title=dict(text=f"NUR Exploration (beta={beta}, endliches n) - entscheidet die offene Vermutung NICHT", x=0.02, font=dict(size=12, color=RED)))
+                       title=dict(text=f"NUR Exploration (beta={beta}, endliches n) - beweist und entscheidet nichts von Satz 2", x=0.02, font=dict(size=12, color=RED)))
     fig.update_xaxes(title="n", fixedrange=True)
     fig.update_yaxes(title="Wert / n^k", fixedrange=True, gridcolor=LIGHT)
     return fig

@@ -340,6 +340,12 @@ def satz2_c3(beta, k):
     return (beta - r) ** k * q ** (k - 1) / ((q + 1) * math.factorial(k))
 
 
+def satz2_case(beta):
+    """Fall aus Satz 2: "a" (r <= (q-1)/(q^2+q-1): B ~ c1*n^k, exakter asymptotischer Wert bewiesen) oder "b" (r > ...: nur Schranken, die obere ist vermutet)."""
+    q, r = _qr(beta)
+    return "a" if r <= (q - 1) / (q * q + q - 1) + 1e-12 else "b"
+
+
 def _qr(beta):
     """1 = q*beta + r mit q ganzzahlig >= 2, 0 <= r < beta (q = floor(1/beta), r = 1 - q*beta; Satz 2 des Papers gilt fuer beta in (0, 0.5])."""
     beta = float(beta)

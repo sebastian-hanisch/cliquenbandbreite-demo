@@ -14,8 +14,8 @@ Ein Hypergraph H=(V,E) modelliert im Paper z. B. ein Multielektroden-Array: ein 
 benachbart, wenn eine Hyperkante beide enthält); eine **schwache Kantenclique-Überdeckung** ist eine Familie schwacher Cliquen, sodass jede Hyperkante Teilmenge einer davon ist, ihre kleinste
 Größe ist chi_e(H). **Proposition 1** zeigt chi_e(H) = chi_v(G~_H), wobei G~_H der **schwache Kantenclique-Graph** ist (Ecken = Hyperkanten, benachbart wenn ihre Vereinigung selbst eine
 schwache Clique ist) und chi_v die **Eckenüberdeckungszahl durch Cliquen** (= Färbungszahl des Komplementgraphen) ist – NICHT die Färbungszahl von G~_H selbst. Für die Graphenfamilie
-**G(n,k,b)** (k-elementige Teilmengen von {0,...,n} mit Spannweite ≤ b) gibt das Paper eine **exakte Formel für die Bandbreite (Satz 1a)**, eine **Asymptotik (Satz 1b)** und eine **offene
-Vermutung (Satz 2)** an.
+**G(n,k,b)** (k-elementige Teilmengen von {0,...,n} mit Spannweite ≤ b) gibt das Paper eine **exakte Formel für die Bandbreite (Satz 1a)**, eine **Asymptotik (Satz 1b)** und für b~β·n mit **Satz 2** den exakten Wert (Fall a) bzw. nur Schranken mit einer
+**offenen Vermutung** für die obere Schranke (Fall b) an.
 
 **Einordnung in die Reihe:** die Reihe hat zwölf Stücke, dies ist das zwölfte und letzte (Details in `graphen-planung/PLAN.md` des Portfolio-Ordners):
 
@@ -33,13 +33,13 @@ Ergebnis in Kürze – alles EIGENER NACHBAU, NUMERISCH NACHVOLLZOGEN, KEIN NEUE
 UND** dem Elektrodengitter-Beispiel **ohne eine einzige Abweichung**. **Satz 1a** trifft die eigens dafür entwickelte exakte Bandbreiten-Suche `exact_bandwidth_layered` auf **28 bestätigten
 (n,k,b)-Tripeln EXAKT** – wobei die Vormessung einen unerwarteten Befund lieferte: die Schwierigkeit dieser Suche hängt NICHT von der Eckenzahl ab, sondern davon, wie NAH b am
 Satz-1a-Schwellenwert liegt (s. "Vormessung" unten). Die selbst entworfene **bandbreitenbeschränkte Färbungs-DP** gewinnt auf manchen Hypergraphen gegen ein einfaches Greedy-Verfahren, verliert
-auf anderen – ehrlich in beide Richtungen gemessen, keine Schönfärberei. **Satz 2** (die offene Vermutung für b~β·n) wird hier ausdrücklich NUR exploriert, nicht entschieden.
+auf anderen – ehrlich in beide Richtungen gemessen, keine Schönfärberei. **Satz 2** (b~β·n: Fall a) bewiesen, Fall b) mit offener Vermutung für die obere Schranke) wird hier ausdrücklich NUR exploriert, nicht entschieden.
 
 ## Warum dieses Problem
 
 Bandbreitenminimierung (Stück 11) und Cliquenüberdeckung über Graphfärbung (Stück 5) sind zwei eigenständige, in dieser Reihe bereits behandelte Probleme – dieses letzte Stück zeigt, wie sie in
 der eigenen Forschungsarbeit des Autors zusammenlaufen: die Bandbreite einer eigens für die Cliquenüberdeckung konstruierten Graphenfamilie G(n,k,b) lässt sich für einen großen Parameterbereich
-EXAKT angeben (Satz 1a), asymptotisch verstehen (Satz 1b) und jenseits davon nur vermuten (Satz 2, bis heute offen). Die Demo baut jede dieser drei Aussagen selbst nach – niemals als
+EXAKT angeben (Satz 1a), asymptotisch verstehen (Satz 1b) und für b~β·n teils exakt (Satz 2, Fall a), teils nur mit Schranken und einer bis heute offenen Vermutung (Satz 2, Fall b). Die Demo baut jede dieser drei Aussagen selbst nach – niemals als
 "bewiesen" durch die App selbst, sondern immer als numerische Nachprüfung einer bereits veröffentlichten, von Konrad Engel und dem Autor gemeinsam bewiesenen Arbeit.
 
 ## Vorab-Hypothesen (vor der Messung notiert, hier geprüft)
@@ -78,7 +78,7 @@ Presets (9), alle mit den Zahlen in ihren Hilfetexten (`tests/test_app.py`):
 | Lehrbuch von Hand (4,2,3) | Kleinste nichttriviale G(n,k,b)-Instanz, Satz-1a-Formel von Hand nachrechenbar |
 | Satz 1a: 28 Fälle exakt gegen die Formel | Alle bestätigten Tripel liegen auf der Diagonale (Formel == exakt) |
 | Satz 1b: Konvergenz gegen k·C(b,k) | Verhältnis liegt für b = 2 und 3 bei 1 (b = 4: nur Cuthill-McKee-Obergrenzen, darüber) |
-| Satz 2: nur Exploration (offene Vermutung) | Heuristik-Obergrenzen gegen c1/c2/c3, deutlich als offene Frage beschriftet |
+| Satz 2: nur Exploration (Fall a/b) | Heuristik-Obergrenzen gegen c1/c2/c3, mit Hinweis, ob für das gewählte β Fall a) (bewiesen) oder Fall b) (offene Vermutung) gilt |
 | Elektrodengitter-Beispiel | Synthetisches Elektrodenraster, Paper-Motivation |
 | Greedy verfehlt das Optimum | 11 statt 10 Cliquen bei Greedy |
 | DP gewinnt gegen Greedy | DP trifft das Optimum, Greedy nicht |
@@ -145,7 +145,7 @@ daher `BRUTEFORCE_COVER_LIMIT=9`).
   nicht einfacher. Manche kleine, "gerade eben gültige" G(n,k,b)-Instanzen bleiben unlösbar (s. "Befunde").
 - **`banded_coloring_dp` schlägt Greedy nicht immer** – ein echtes, gemessenes Ergebnis in beide Richtungen, kein Makel: die DP ist ein eigenständiges Greedy-Verfahren mit einer
   Effizienz-Idee (Fenster-Zustand statt voller Nachbarschaftsabfrage), keine Optimierung der Farbenzahl.
-- **Satz 2 (die offene Vermutung) wird NICHT entschieden** – die Exploration zeigt nur, wie die Heuristik-Obergrenze bei endlichem, kleinem n gegenüber den asymptotischen Referenzwerten liegt (q = ⌊1/β⌋, r = 1 − qβ; Fall a) des Satzes, in dem der Wert bekannt ist, gilt für β = 0.15, 0.25, 0.45, Fall b) nur für β = 0.35).
+- **Satz 2 wird NICHT entschieden** (Fall a) ist bewiesen, die Vermutung in Fall b) bleibt offen) – die Exploration zeigt nur, wie die Heuristik-Obergrenze bei endlichem, kleinem n gegenüber den asymptotischen Referenzwerten liegt (q = ⌊1/β⌋, r = 1 − qβ; Fall a) des Satzes, in dem der Wert bekannt ist, gilt für β = 0.15, 0.25, 0.45, Fall b) nur für β = 0.35).
 - **Elektrodengitter-Beispiel ist eine stark vereinfachte, synthetische Illustration** – zufällige Zellzentren mit den k nächstgelegenen Elektroden als Kontaktmenge, KEINE Rekonstruktion der
   echten Spike-Simulation aus `delay-graph-demo` (Zwei-Gauß-Vorlagen, Erneuerungsprozesse, Rauschen).
 - **Exakte Bandbreite/Cliquenüberdeckung nur bis zur gemessenen Größengrenze** – s. `cb_constants.EXACT_LAYERED_LIMIT`/`CHROM_EXACT_LIMIT`/`BRUTEFORCE_COVER_LIMIT`.
@@ -177,7 +177,7 @@ python -m pytest tests/ -v
 
 ## Bewusst nicht umgesetzt
 
-Eine Umsetzung der offenen Vermutung aus Satz 2 (sie ist bis heute unbewiesen). Eine vollständige, exakte Bodlaender-DP über beliebige Baumzerlegungen (nur der bandbreitenbeschränkte
+Ein Beweis der offenen Vermutung aus Satz 2 Fall b) (die obere Schranke ist bis heute unbewiesen; Fall a) ist im Paper bewiesen). Eine vollständige, exakte Bodlaender-DP über beliebige Baumzerlegungen (nur der bandbreitenbeschränkte
 Spezialfall). Eine Rekonstruktion der echten Multielektroden-Spike-Simulation aus `delay-graph-demo` (nur eine kleine, synthetische Illustration). Mit diesem Stück ist die
 Graphen-und-Netzwerke-Reihe VOLLSTÄNDIG (12 von 12 Stücken).
 

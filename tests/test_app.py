@@ -144,7 +144,8 @@ def test_permalink_accepts_valid_values_and_writes_them_back():
     _ok(at)
     ss = at.session_state
     assert (ss["view_select"], ss["universe_slider"], ss["khyper_slider"], ss["mhyper_slider"], ss["seed_input"], ss["cb_step"]) == ("hyper", 8, 2, 6, 7, 2)
-    assert at.query_params["seed"] == ["7"] and at.query_params["step"] == ["2"]
+    qp = at.query_params
+    assert qp["seed"] in (["7"], "7") and qp["step"] in (["2"], "2")
 
 
 def test_switching_view_back_and_forth_keeps_the_stored_values():

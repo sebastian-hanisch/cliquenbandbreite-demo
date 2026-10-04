@@ -1,5 +1,8 @@
 """Auswertungsfunktionen: `analyse` fuer alle vier Ansichten, Satz-1b-Sweep/Satz-2-Exploration (nur Plausibilitaet, keine Entscheidung), `cover_quality` (ehrlich in beide Richtungen)."""
 
+import math
+
+import cb_algorithm as A
 import cb_constants as C
 import cb_evaluation as ev
 
@@ -69,6 +72,51 @@ def test_satz2_exploration_is_labelled_as_exploration_and_never_claims_a_decisio
     assert len(rows) == 3
     for r in rows:
         assert "measured_scaled" in r and "c1" in r and "upper_ref" in r
+
+
+def _satz2_reference(beta, k):
+    """Unabhaengige Referenz (Fractions) fuer Satz 2 (Engel/Hanisch, arXiv:1605.00450): q = floor(1/beta), r = 1 - q*beta, c1/c2/c3 laut Paper."""
+    from fractions import Fraction
+    import math
+    b = Fraction(str(beta))
+    q = math.floor(1 / b)
+    r = 1 - q * b
+    f = math.factorial(k)
+    c1 = b ** k / f * (k - Fraction(k - 1, q))
+    c2 = b ** (k - 1) / ((q + 1) * f) * (k - (k - 1) * b)
+    c3 = (b - r) ** k / ((q + 1) * f) * q ** (k - 1)
+    return q, r, c1, c2, c3
+
+
+def test_satz2_constants_match_independent_reference_with_floor_q():
+    # Regressionstest: _qr nutzte ceil(1/beta) statt floor(1/beta) (r negativ, c1/c2/c3 falsch fuer beta = 0.15/0.35/0.45).
+    for beta in (0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5):
+        for k in (2, 3):
+            q, r, c1, c2, c3 = _satz2_reference(beta, k)
+            q_code, r_code = A._qr(beta)
+            assert q_code == q and abs(r_code - float(r)) < 1e-9 and 0 <= r_code < beta
+            assert abs(A.satz2_c1(beta, k) - float(c1)) < 1e-12
+            assert abs(A.satz2_c2(beta, k) - float(c2)) < 1e-12
+            assert abs(A.satz2_c3(beta, k) - float(c3)) < 1e-12
+            # Identitaet aus dem Beweis des Papers: (q+1)*c2 - q*c1 = beta^(k-1) * r / (k-1)!
+            assert abs((q + 1) * A.satz2_c2(beta, k) - q * A.satz2_c1(beta, k) - beta ** (k - 1) * r_code / math.factorial(k - 1)) < 1e-12
+
+
+def test_satz2_lower_ref_uses_q_not_beta_and_cases():
+    rows = ev.satz2_exploration(k=2, betas=(0.35, 0.45), ns=(10,))
+    for r in rows:
+        q, _ = A._qr(r["beta"])
+        assert abs(r["lower_ref"] - max(r["c1"], r["c2"] + r["c3"] / q)) < 1e-12
+        assert r["lower_ref"] <= r["upper_ref"] + 1e-12
+
+
+def test_qr_rejects_beta_outside_paper_range():
+    for bad in (0.0, 0.51, 1.0):
+        try:
+            A._qr(bad)
+        except ValueError:
+            continue
+        raise AssertionError(bad)
 
 
 def test_reduction_check_returns_requested_number_of_trials():

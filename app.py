@@ -220,7 +220,7 @@ else:
     st.caption(f"{n_match} von {len(s1a_rows)} bestätigten (n,k,b)-Tripeln: Formel == exakte Suche (`exact_bandwidth_layered`), EIGENER NACHBAU, kein neuer Beweis.")
     st.markdown("### Satz 1b (Asymptotik, b=o(n))")
     st.plotly_chart(viz.build_satz1b_chart(s1b_rows), width="stretch", key="s4_satz1b")
-    st.caption("Verhältnis gemessene Bandbreite / [k·C(b,k)] über wachsendes n - nähert sich 1, KEIN Gültigkeitstest (die Formel gilt nur im Grenzwert n→∞).")
+    st.caption("Verhältnis gemessene Bandbreite / [k·C(b,k)] über wachsendes n - bei b = 2 und b = 3 liegt es bei 1; bei b = 4 gibt die exakte Suche meist auf (nur n = 10 gelingt, dort 11 < 12); sonst bleibt eine Cuthill-McKee-Obergrenze, sie liegt darüber (ca. 1,1 bis 1,8) und nähert sich 1 nicht. KEIN Gültigkeitstest (die Formel gilt nur im Grenzwert n→∞).")
     st.markdown("### Satz 2 (b~β·n, offene Vermutung)")
     beta_choice = st.select_slider("β", options=C.SATZ2_BETAS, key="satz2_beta")
     st.plotly_chart(viz.build_satz2_chart(s2_rows, beta_choice), width="stretch", key=f"s4_satz2_{beta_choice}")
@@ -297,6 +297,6 @@ Satz-1a/1b/2-Messreihen).
 st.markdown("---")
 st.caption(
     "Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – "
-    "Operations Research und Machine Learning. Interesse an einer maßgeschneiderten Lösung für "
-    "Ihr Unternehmen? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html)"
+    "Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). "
+    "Mehr zur Reihe: [Graphen und Netzwerke: BFS bis Cliquenbandbreite](https://sebastianhanisch.net/konzepte-graphen-netzwerke.html)."
 )

@@ -341,14 +341,12 @@ def satz2_c3(beta, k):
 
 
 def _qr(beta):
-    """1 = q*beta + r mit q ganzzahlig >= 2, 0 <= r < beta (q = ceil(1/beta), r = 1 - q*beta)."""
+    """1 = q*beta + r mit q ganzzahlig >= 2, 0 <= r < beta (q = floor(1/beta), r = 1 - q*beta; Satz 2 des Papers gilt fuer beta in (0, 0.5])."""
     beta = float(beta)
-    if not (0 < beta < 1):
-        raise ValueError("beta muss in (0,1) liegen")
-    q = math.ceil(1.0 / beta)
-    if q < 2:
-        q = 2
-    r = 1.0 - q * beta
+    if not (0 < beta <= 0.5):
+        raise ValueError("beta muss in (0, 0.5] liegen")
+    q = math.floor(1.0 / beta + 1e-9)  # kleine Toleranz: 1/beta = 4.000...01/3.999... bei Gleitkomma (z. B. beta = 0.25) soll q = 4, r = 0 liefern
+    r = max(0.0, 1.0 - q * beta)
     return q, r
 
 

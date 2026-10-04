@@ -67,7 +67,7 @@ Alle Zahlen über `cb_evaluation`-Funktionen nachgerechnet (`tests/test_correctn
 | **Stimmt Satz 1a?** | ✅ Ja, exakt auf allen 28 bestätigten Tripeln (k=1: 7 Fälle, k=2: 12 Fälle, k=3: 9 Fälle, n bis 14). |
 | **Wie schwer ist `exact_bandwidth_layered`?** | Überraschend NICHT abhängig von der Eckenzahl: (n,k,b)=(10,3,10) mit 165 Ecken löst in 0.016s, aber (n,k,b)=(6,2,4) mit nur 18 Ecken übersteigt bereits ein Budget von 400.000 Suchschritten – die Schwierigkeit hängt daran, wie NAH b am Satz-1a-Schwellenwert (n+k-1)/2 liegt (dichtere, "vollständigere" Graphen sind dank einer Cliquen-Schranke fast immer sofort lösbar, "gerade eben gültige" Fälle nicht). Von 297 durchsuchten Kandidaten-Tripeln lagen 98 innerhalb des Budgets (0 Abweichungen), 46 wurden als zu langsam übersprungen. |
 | **Wie nah kommt Satz 1b?** | Für k=2, b=2 (klein und fest) nähert sich das gemessene B(n,k,b)/[k·C(b,k)] mit wachsendem n (6→46) dem Wert 1 – EIGENER NACHBAU, KEIN Gültigkeitstest (die Formel gilt nur asymptotisch). |
-| **Was zeigt die Satz-2-Exploration?** | Für mehrere β (0.15–0.45) liegt die gemessene Heuristik-Obergrenze (Cuthill-McKee/Reverse-Cuthill-McKee) auf den erreichbaren n (10–30) bereits deutlich unter den asymptotischen c1/c2/c3-Referenzwerten – ERWARTBAR, da die Referenzwerte für n→∞ gelten und bei kleinem n noch nicht erreicht werden. Das entscheidet die offene Vermutung NICHT, unabhängig davon, wie die Kurven aussehen. |
+| **Was zeigt die Satz-2-Exploration?** | Gemessene Heuristik-Obergrenze (Cuthill-McKee/Reverse-Cuthill-McKee, skaliert durch n^k, k=2) gegen die asymptotischen Referenzwerte c1 und c2+c3 (n = 10–30): bei β = 0.15 liegt sie unter c1 (0,008–0,020 gegen c1 ≈ 0,021); bei β = 0.25 liegt sie ab n = 16 über c1 (0,062–0,086 gegen 0,055; bei n = 10: 0,020), bei β = 0.35 (0,11–0,23 gegen c1 ≈ 0,092 und c2+c3 ≈ 0,097) und β = 0.45 (0,22–0,24 gegen c1 ≈ 0,152 und c2+c3 ≈ 0,157) auf allen n sogar über der Obergrenze c2+c3. Das ist kein Widerspruch zum Paper: die Heuristik liefert nur eine Obergrenze der Bandbreite, kein Optimum, und die Referenzwerte gelten für n→∞. Nur β = 0.35 liegt im Fall b) des Satzes (offene Vermutung); für β = 0.15, 0.25 und 0.45 ist B ~ c1·n^k im Paper bewiesen. Die Messung entscheidet die offene Vermutung NICHT. |
 | **Gewinnt die bandbreitenbeschränkte DP gegen Greedy?** | Gemischt, ehrlich in beide Richtungen: bei (universe=10,k=2,m=18) und (universe=10,k=3,m=20) erreicht die DP das exakte Optimum, Greedy nicht (11→10 bzw. 7→6 Cliquen). Bei (universe=9,k=2,m=20) und (universe=8,k=2,m=15) ist es umgekehrt: Greedy trifft das Optimum, die DP braucht 1–2 Cliquen mehr. Auf den vier kleinen Ausgangsfällen (m≤7) sind alle drei Verfahren gleich. |
 | **Elektrodengitter-Beispiel** | Auf einem 4×4-Raster mit 8 synthetischen Zellen (k=3 Kontaktelektroden je Zelle) findet die exakte Cliquenüberdeckung eine deutlich kleinere Familie als die Hyperkantenzahl selbst – die Paper-Motivation (Neuronen aus überlappenden Elektroden-Kontaktmustern rekonstruieren) wird an einem kleinen, synthetischen Beispiel sichtbar. |
 
@@ -77,7 +77,7 @@ Presets (9), alle mit den Zahlen in ihren Hilfetexten (`tests/test_app.py`):
 |---|---|
 | Lehrbuch von Hand (4,2,3) | Kleinste nichttriviale G(n,k,b)-Instanz, Satz-1a-Formel von Hand nachrechenbar |
 | Satz 1a: 28 Fälle exakt gegen die Formel | Alle bestätigten Tripel liegen auf der Diagonale (Formel == exakt) |
-| Satz 1b: Konvergenz gegen k·C(b,k) | Verhältnis nähert sich 1 mit wachsendem n |
+| Satz 1b: Konvergenz gegen k·C(b,k) | Verhältnis liegt für b = 2 und 3 bei 1 (b = 4: nur Cuthill-McKee-Obergrenzen, darüber) |
 | Satz 2: nur Exploration (offene Vermutung) | Heuristik-Obergrenzen gegen c1/c2/c3, deutlich als offene Frage beschriftet |
 | Elektrodengitter-Beispiel | Synthetisches Elektrodenraster, Paper-Motivation |
 | Greedy verfehlt das Optimum | 11 statt 10 Cliquen bei Greedy |
@@ -145,7 +145,7 @@ daher `BRUTEFORCE_COVER_LIMIT=9`).
   nicht einfacher. Manche kleine, "gerade eben gültige" G(n,k,b)-Instanzen bleiben unlösbar (s. "Befunde").
 - **`banded_coloring_dp` schlägt Greedy nicht immer** – ein echtes, gemessenes Ergebnis in beide Richtungen, kein Makel: die DP ist ein eigenständiges Greedy-Verfahren mit einer
   Effizienz-Idee (Fenster-Zustand statt voller Nachbarschaftsabfrage), keine Optimierung der Farbenzahl.
-- **Satz 2 (die offene Vermutung) wird NICHT entschieden** – die Exploration zeigt nur, wie die Heuristik-Obergrenze bei endlichem, kleinem n gegenüber den asymptotischen Referenzwerten liegt.
+- **Satz 2 (die offene Vermutung) wird NICHT entschieden** – die Exploration zeigt nur, wie die Heuristik-Obergrenze bei endlichem, kleinem n gegenüber den asymptotischen Referenzwerten liegt (q = ⌊1/β⌋, r = 1 − qβ; Fall a) des Satzes, in dem der Wert bekannt ist, gilt für β = 0.15, 0.25, 0.45, Fall b) nur für β = 0.35).
 - **Elektrodengitter-Beispiel ist eine stark vereinfachte, synthetische Illustration** – zufällige Zellzentren mit den k nächstgelegenen Elektroden als Kontaktmenge, KEINE Rekonstruktion der
   echten Spike-Simulation aus `delay-graph-demo` (Zwei-Gauß-Vorlagen, Erneuerungsprozesse, Rauschen).
 - **Exakte Bandbreite/Cliquenüberdeckung nur bis zur gemessenen Größengrenze** – s. `cb_constants.EXACT_LAYERED_LIMIT`/`CHROM_EXACT_LIMIT`/`BRUTEFORCE_COVER_LIMIT`.
@@ -199,3 +199,7 @@ venv\Scripts\streamlit run app.py
 - Bodlaender, H. L. (1988). *Dynamic programming on graphs with bounded treewidth.* ICALP 1988.
 
 Gebaut mit Streamlit, Plotly, NumPy und pandas.
+
+---
+
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Graphen und Netzwerke: BFS bis Cliquenbandbreite](https://sebastianhanisch.net/konzepte-graphen-netzwerke.html).

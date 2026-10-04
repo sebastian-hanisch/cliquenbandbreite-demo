@@ -194,7 +194,7 @@ def satz2_exploration(k=C.SATZ2_K, betas=C.SATZ2_BETAS, ns=C.SATZ2_NS):
             measured = min(A.bandwidth(adj, cm), A.bandwidth(adj, rcm))
             scaled = measured / (n ** k) if n > 0 else None
             rows.append({"k": k, "beta": beta, "n": n, "b": b, "n_vertices": len(verts), "measured": measured, "measured_scaled": scaled,
-                         "c1": c1, "c2": c2, "c3": c3, "lower_ref": max(c1, c2 + c3 / max(beta, 1e-9) ** (k - 1)) if k > 1 else c1, "upper_ref": c2 + c3})
+                         "c1": c1, "c2": c2, "c3": c3, "lower_ref": max(c1, c2 + c3 / A._qr(beta)[0] ** (k - 1)), "upper_ref": c2 + c3})
     return rows
 
 

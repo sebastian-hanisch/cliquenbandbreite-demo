@@ -103,11 +103,11 @@ PRESETS = {
 PRESET_HELP = {
     "Lehrbuch von Hand (4,2,3)": "Die kleinste nichttriviale G(n,k,b)-Instanz - Ecken/Kanten und die Satz-1a-Formel von Hand nachrechenbar.",
     "Satz 1a: 28 Fälle exakt gegen die Formel": "Alle 28 in der Vormessung bestätigten (n,k,b)-Tripel: die geschlossene Formel (eigener Nachbau) trifft die exakte Bandbreite in JEDEM Fall.",
-    "Satz 1b: Konvergenz gegen k·C(b,k)": "Für festes b nähert sich B(n,k,b)/[k·C(b,k)] mit wachsendem n dem Wert 1 - asymptotisch, eigener Nachbau, kein Gültigkeitstest.",
+    "Satz 1b: Konvergenz gegen k·C(b,k)": "Für festes kleines b (hier b = 2 und 3) liegt B(n,k,b)/[k·C(b,k)] bei wachsendem n bei 1 - asymptotisch, eigener Nachbau, kein Gültigkeitstest.",
     "Satz 2: nur Exploration (offene Vermutung)": "Heuristik-Obergrenzen gegen die c1/c2/c3-Schranken für b≈β·n - AUSDRÜCKLICH nur Exploration mit endlichem n, entscheidet die offene Vermutung NICHT.",
-    "Elektrodengitter-Beispiel": "Synthetisches Elektrodenraster (Paper-Motivation: Multielektroden-Array) - 8 Zellen brauchen nur 5 schwache Cliquen zur Überdeckung, 3 Hyperkantenpaare verschmelzen.",
+    "Elektrodengitter-Beispiel": "Synthetisches Elektrodenraster (Paper-Motivation: Multielektroden-Array) - 8 Zellen (Hyperkanten) brauchen nur 5 schwache Cliquen zur Überdeckung - ein Paar und ein Dreierblock von Hyperkanten verschmelzen.",
     "Greedy verfehlt das Optimum": "Bei diesen 18 Hyperkanten braucht Greedy 11 statt der optimalen 10 schwachen Cliquen - ein gemessener, kein erzwungener Unterschied.",
     "DP gewinnt gegen Greedy": "Hier trifft die bandbreitenbeschränkte DP (CM-Reihenfolge auf dem Komplement) das Optimum, Greedy (natürliche Reihenfolge) nicht.",
     "DP verliert gegen Greedy (ehrlich)": "Hier ist es umgekehrt: Greedy trifft das Optimum, die DP braucht 2 Cliquen mehr - ehrlich auch gezeigt, wenn das eigene Verfahren NICHT gewinnt.",
-    "Große Instanz: Cuthill-McKee gegen die Formel": "n=14, k=2, b=8: 84 Ecken, Cuthill-McKee gegen die exakte Suche und die Satz-1a-Formel.",
+    "Große Instanz: Cuthill-McKee gegen die Formel": "n=14, k=2, b=8: 84 Ecken, Cuthill-McKee gegen die Satz-1a-Formel (die exakte Suche gibt hier auf und zeigt n/a).",
 }

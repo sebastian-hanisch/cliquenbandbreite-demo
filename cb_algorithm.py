@@ -312,7 +312,7 @@ def bandwidth_satz1a(n, k, b):
     if k < 1:
         raise ValueError("k muss mindestens 1 sein")
     if 2 * b < n + k - 1:
-        raise ValueError("Satz 1a gilt nur fuer b >= (n+k-1)/2")
+        raise ValueError("Satz 1a gilt nur für b >= (n+k-1)/2")
     term = (n + 1) * math.comb(b, k - 1) - (k - 1) * math.comb(b + 1, k) + math.comb(2 * b - n + 1, k) - 2
     return math.ceil(term / 2)
 

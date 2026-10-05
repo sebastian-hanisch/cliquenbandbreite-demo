@@ -17,7 +17,7 @@ schwache Clique ist) und chi_v die **Eckenüberdeckungszahl durch Cliquen** (= F
 **G(n,k,b)** (k-elementige Teilmengen von {0,...,n} mit Spannweite ≤ b) gibt das Paper eine **exakte Formel für die Bandbreite (Satz 1a)**, eine **Asymptotik (Satz 1b)** und für b~β·n mit **Satz 2** den exakten Wert (Fall a) bzw. nur Schranken mit einer
 **offenen Vermutung** für die obere Schranke (Fall b) an.
 
-**Einordnung in die Reihe:** die Reihe hat zwölf Stücke, dies ist das zwölfte und letzte (Details in `graphen-planung/PLAN.md` des Portfolio-Ordners):
+**Einordnung in die Reihe:** die Reihe hat dreizehn Stücke (zwölf im Baum, dazu die Fall-Demo interne-verlinkung-demo), dies ist das zwölfte und letzte im Baum (Details in `graphen-planung/PLAN.md` des Portfolio-Ordners):
 
 ```
 1 BFS und DFS (Wurzel)                                                        [gebaut: bfs-dfs-demo]
@@ -179,7 +179,7 @@ python -m pytest tests/ -v
 
 Ein Beweis der offenen Vermutung aus Satz 2 Fall b) (die obere Schranke ist bis heute unbewiesen; Fall a) ist im Paper bewiesen). Eine vollständige, exakte Bodlaender-DP über beliebige Baumzerlegungen (nur der bandbreitenbeschränkte
 Spezialfall). Eine Rekonstruktion der echten Multielektroden-Spike-Simulation aus `delay-graph-demo` (nur eine kleine, synthetische Illustration). Mit diesem Stück ist die
-Graphen-und-Netzwerke-Reihe VOLLSTÄNDIG (12 von 12 Stücken).
+Graphen-und-Netzwerke-Reihe VOLLSTÄNDIG (13 von 13 Stücken).
 
 ## Lokal ausführen
 
